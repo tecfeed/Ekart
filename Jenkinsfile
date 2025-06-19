@@ -53,7 +53,7 @@ pipeline {
         stage('Docker build image') {
             steps {
                 script{
-                    withDockerRegistry(credentialsId: '0e91734b-224b-4a19-bdad-41fc7c89d005', toolName: 'docker') {
+                    withDockerRegistry(credentialsId: 'dockerhub-token', toolName: 'docker') {
                         sh "docker build -t ekartulti:1 -f docker/Dockerfile ."
                         
                     }
@@ -68,21 +68,30 @@ pipeline {
         stage('Docker tag & push image') {
             steps {
                 script{
-                    withDockerRegistry(credentialsId: '0e91734b-224b-4a19-bdad-41fc7c89d005', toolName: 'docker') {
+                    withDockerRegistry(credentialsId: 'dockerhub-token', toolName: 'docker') {
                         sh "docker tag ekartulti:1 saurabh6870/ekartulti:1"
                         sh "docker push saurabh6870/ekartulti:1"
                     }
                 }
         }        
-        }deploy to kuber
-	//
+        }
+        //deploying to kuber
+        /*
         stage('Kubernetes Deploy') {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8-ulti-token', namespace: 'ekartapp', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.31.201:6443') {
+                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8-ulti-token', namespace: 'default', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.31.201:6443') {
                 sh "kubectl apply -f deploymentservice.yml -n ekartapp"
                 sh "kubectl get svc -n ekartapp"
             }
             }
         }
+        
+        //deploying to docker-compose
+        stage('Deploy to docker-compose') {
+            steps {
+                sh ""
+            }
+        }
+        */
     }
 }
